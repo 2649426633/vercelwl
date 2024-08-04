@@ -68,6 +68,7 @@
                 var titleElement = document.querySelector(".title");
                 titleElement.innerHTML = title.replace(/\\n/g, "<br>");
                 titleElement.style.display = "block";
+                document.title = title.replace(/\\n/g, " ");  // 动态设置页面标题
             }
             if (content) {
                 var contentElement = document.querySelector(".content");
