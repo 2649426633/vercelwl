@@ -47,29 +47,46 @@
     </div>
 
     <script>
+        // 改进后的函数：只拆分"key=value"中的第一个"="
+        // 如果这个参数后面有 "&"，则表示还有更多参数；否则就拿到所有剩余字符
         function getQueryVariable(variable) {
-            var query = window.location.search.substring(1);
+            var query = window.location.search.substring(1);  // 去掉 '?'
             var vars = query.split("&");
             for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split("=");
-                if (pair[0] == variable) {
-                    return decodeURIComponent(pair[1].replace(/\+/g, ' '));
+                // 只找第一个 '=' 位置
+                var index = vars[i].indexOf("=");
+                if (index === -1) {
+                    continue; // 这一段没有"=", 无效参数
+                }
+                
+                // key 就是 '=' 前面的部分
+                var key = vars[i].substring(0, index);
+                // value 就是 '=' 后面的所有部分
+                var value = vars[i].substring(index + 1);
+
+                if (key === variable) {
+                    // 把 URL 编码和加号替换还原
+                    return decodeURIComponent(value.replace(/\+/g, ' '));
                 }
             }
             return null;
         }
 
         window.onload = function() {
-            var title = getQueryVariable("t");  // 获取标题参数
+            var title   = getQueryVariable("t");  // 获取标题参数
             var content = getQueryVariable("c");  // 获取内容参数
-            var pic = getQueryVariable("p");  // 获取图片链接参数
+            var pic     = getQueryVariable("p");  // 获取图片链接参数
+
+            console.log("获取到的图片链接 p:", pic);
 
             // 动态显示标题
             if (title) {
                 var titleElement = document.querySelector(".title");
+                // 把 "\n" 替换为 <br> 显示换行
                 titleElement.innerHTML = title.replace(/\\n/g, "<br>");
                 titleElement.style.display = "block";
-                document.title = title.replace(/\\n/g, " ");  // 动态设置页面标题
+                // 动态设置页面标题（选填）
+                document.title = title.replace(/\\n/g, " ");
             }
 
             // 动态显示内容
@@ -82,7 +99,10 @@
             // 动态显示图片
             if (pic) {
                 var picElement = document.querySelector(".pic");
-                picElement.src = pic;  // 确保图片链接被正确赋值
+                // 如果 Bing 对 "//th" 敏感，请在这里手动修正
+                // pic = pic.replace("cn.bing.com//th?", "cn.bing.com/th?");
+                
+                picElement.src = pic;
                 picElement.style.display = "block";
             }
         }
