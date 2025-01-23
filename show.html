@@ -47,6 +47,7 @@
     </div>
 
     <script>
+        // 获取 URL 查询参数的函数
         function getQueryVariable(variable) {
             var query = window.location.search.substring(1);
             var vars = query.split("&");
@@ -59,22 +60,28 @@
             return null;
         }
 
+        // 页面加载完成后执行的函数
         window.onload = function() {
-            var title = getQueryVariable("t");
-            var content = getQueryVariable("c");
-            var pic = getQueryVariable("p");
+            var title = getQueryVariable("t");  // 获取标题参数
+            var content = getQueryVariable("c");  // 获取内容参数
+            var pic = getQueryVariable("p");  // 获取图片链接参数
 
+            // 动态显示标题
             if (title) {
                 var titleElement = document.querySelector(".title");
                 titleElement.innerHTML = title.replace(/\\n/g, "<br>");
                 titleElement.style.display = "block";
                 document.title = title.replace(/\\n/g, " ");  // 动态设置页面标题
             }
+
+            // 动态显示内容
             if (content) {
                 var contentElement = document.querySelector(".content");
                 contentElement.innerHTML = content.replace(/\\n/g, "<br>");
                 contentElement.style.display = "block";
             }
+
+            // 动态显示图片
             if (pic) {
                 var picElement = document.querySelector(".pic");
                 picElement.src = pic;
